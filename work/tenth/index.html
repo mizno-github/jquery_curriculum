@@ -66,8 +66,136 @@
       //  </div>
       // </li>
       //
-      //
-      //
+      // 取得できた書籍の件数をもとに、ページャを作成しましょう
+      // ページャの条件
+      // ├ 「前へ」と「次へ」のボタンがある
+      // ├ 1ページ目では「前へ」に、最後のページでは「次へ」にdisableクラスをつけて非活性にする
+      // └ 1ページしかない場合はどちらもdisableクラスをつけて非活性にする
+      // 
+      // ページャのテンプレート
+      // <div class="js-pager">
+      //   <ul class="btn-wrapper">
+      //     <li class="prev btn-item"><a class="btn-anchor" href="">前へ</a></li>
+      //     <li class="next btn-item"><a class="btn-anchor" href="">次へ</a></li>
+      //   </ul>
+      // </div>
+
+      // 以下、回答例
+      $(function() {
+        var parameter = {
+          applicationId: '1019399324990976605',
+          keyword: '',
+          hits: 20,
+          page: 1,
+        };
+        var isLastPage = false;
+
+        $('.search__btn').on('click', function() { 
+          init();
+          request();
+        });
+
+        // メリット1：ページャがjQueryで追加されるため、onメソッドじゃないと動かなくなり、復習になる
+        $(document).on('click', '.prev', function() {
+          if (parameter.page === 1) return false;
+          isLastPage = false;
+          parameter.page--;
+          request();
+        });
+
+        $(document).on('click', '.next', function() {
+          if (isLastPage) return noMorePageMessage();
+          parameter.page++;
+          request();
+        });
+
+        // メリット2：複数のイベントでajax通信を行うので、必然的に関数ごとに分ける有用性に気づきやすくなる
+        function request() {
+          parameter.keyword = $('#js-search-word').val();
+          $.ajax({ 
+            url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20130522',
+            type : 'GET',
+            datatype: 'json',
+            data: parameter,
+          }).done(function(data) {
+            if (data.count === 0) {
+              notFoundMessage();
+            } else {
+              showResult(data.Items);
+              showPager(data);
+            }
+            if (parameter.page === data.pageCount) isLastPage = true;
+          }).fail(function(e) {
+            responseErrorMessage(e);
+          });
+        }
+
+        function init() {
+          parameter.page = 1;
+          isLastPage = false;
+          $('.message').remove();
+          $('.lists').empty();
+        };
+
+        function notFoundMessage() {
+          $('.message').remove();
+          $('.lists').before('<div class="message">検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>');
+        } 
+
+        function noMorePageMessage() {
+          $('.message').remove();
+          $('.lists').before('<div class="message">これ以上はありません</div>');
+        }
+
+        function responseErrorMessage(e) {
+          $('.message').remove();
+          if (e.status === 0) {
+            $('.lists').before('<div class="message">通信に失敗しました。インターネットの接続をご確認ください</div>');
+          } else if (e.status === 400) {
+            $('.lists').before('<div class="message">検索文字が空、もしくは半角英数1文字になっています</div>');
+          } else {
+            $('.lists').before('<div class="message">予期せぬエラーが発生しました。</div>');
+          }
+          
+        }
+
+        function showResult(result) {
+          $('.message').remove();
+          let template = '';
+          $.each(result, function(index, item) {
+            template += `<li class='lists__item'>
+                          <div class='lists__item__inner'>
+                            <a href='${item.Item.itemUrl}' class='lists__item__link' target='_blank'>
+                              <img src='${item.Item.largeImageUrl}' class='lists__item__img' alt='${item.Item.title}'>
+                              <p class='lists__item__detail'>作品名：${item.Item.title}</p>
+                              <p class='lists__item__detail'>作者　：${item.Itemauthor}</p>
+                              <p class='lists__item__detail'>出版社：${item.Item.publisherName}</p>
+                            </a>
+                          </div>
+                        </li>`;
+          });
+          $('.lists').html(template);
+        }
+
+        // 以下ページャの実装に関する処理
+        function showPager(result) {
+          $('.js-pagination').remove();
+          $('.prev, .next').removeClass('disable');
+          let pagination  = `<div class="js-pagination">
+                              <ul class="btn-wrapper">
+                                <li class="prev btn-item"><a class="btn-anchor" href="#">前へ</a></li>
+                                <li class="next btn-item"><a class="btn-anchor" href="#">次へ</a></li>
+                              </ul>
+                            </div>`;
+            $('.lists').after(pagination);
+            if (result.page === 1) {
+              $('.prev').addClass('disable');
+            }
+            if (result.page === result.pageCount) {
+              $('.next').addClass('disable');
+            }
+        }
+      });
     </script>
   </body>
 </html>
