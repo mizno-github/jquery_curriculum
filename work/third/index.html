@@ -24,6 +24,20 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
+
+    $(function(){
+      $('.nav').children('li').click(function(){
+          // id numの子要素のliがくりくされたら{}内の処理が行われます
+        var num = $(this).index();
+          // 変数numを定義しid numの子要素のliのクリックされた要素を取得します
+        $('.contents').children('li').addClass('is-hidden');
+          // contentsクラスの子要素を全て非表示にします
+        $('.contents').children('li').eq(num).removeClass('is-hidden');
+         // contentsクラスの子要素の（変数num番目）の要素を表示します
+      })
+    });
+
+
       // 今回やるのはタブメニューです。
       // navの小要素であるliをクリックして、contents内の小要素であるli要素を表示させる。
       // .index() 要素のindexを取得します。
