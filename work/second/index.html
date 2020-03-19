@@ -21,17 +21,18 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
-
-      $('.modal-show').click(function(){
-          // modal-showクラスがクリックされたら{}内の処理をします
-        $('.modal').fadeIn();
-          // modalクラスをフェードインさせます
+      $(function(){
+        $('.modal-show').click(function(){
+            // modal-showクラスがクリックされたら{}内の処理をします
+          $('.modal').fadeIn();
+            // modalクラスをフェードインさせます
+        });
+        $('.modal-close').click(function(){
+          // modal-closeクラスがクリックされたら{}内の処理をします
+          $('.modal').fadeOut();
+          // modalクラスをフェードアウトさせます
+        });
       });
-      $('.modal-close').click(function(){
-         // modal-closeクラスがクリックされたら{}内の処理をします
-        $('.modal').fadeOut();
-         // modalクラスをフェードアウトさせます
-     });
       // 今回やるのはモーダルです。
       // .modal-show をクリックすることで .modal をfadeInさせる。
       // .modal-close をクリックで .modal をfadeOutさせる。
