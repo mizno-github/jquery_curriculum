@@ -85,33 +85,20 @@
     <script src="../../common/js/jquery.js"></script>
     <script>
       $(function(){ 
-        // 修正内容
-        // $().each()を使い一つ一つ条件分岐するように修正しました
         $('.select').change(function(){  
-          // selectの値が変更されたら関数が動きます
           var category = $(this).val();
-          // 変数　categoryを宣言しその中にselectの値が入ります
           $('li').each(function(index) {
-            // liの数だけ関数が動きます
             var dataType = $(this).data('category-type');
-            // 変数　dataTypeを宣言しその中にindex番目のliのデータ属性の値が入ります
             if(dataType == category){
-              // もしもdataTypeとcategoryの値が同じだった場合
               $(this).show();
-              // そのliを表示します
             }else if(category == 'all'){
-              // もしもcategoryの値がallの場合
               $(this).show();
-              // そのliを表示します
             }else{
-              // それ以外の場合
               $(this).hide();
-              // そのliを非表示にします
             }
           });
       });
       });
-
 
 
 
