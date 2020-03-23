@@ -87,20 +87,26 @@
       $(function(){ 
         $('.select').change(function(){  
           var category = $(this).val();
-          $('li').each(function(index) {
-            var dataType = $(this).data('category-type');
-            if(dataType == category){
-              $(this).show();
-            }else if(category == 'all'){
-              $(this).show();
-            }else{
-              $(this).hide();
-            }
-          });
-      });
+          if(category==='all'){
+            $('.list').children('li').show();
+          }else{
+            $('.list').children('li').each(function(index,list) {
+              var dataType = $(list).data('category-type');
+              if(dataType === category){
+                $(list).show();
+              }else{
+                $(list).hide();
+              }
+            });
+          }
+        });
       });
 
-
+//// インデント
+// //オールを外に出す
+//// イコール
+//// LI指定
+// eachの中のthisを使わない
 
 
         // 修正前
@@ -110,7 +116,6 @@
         //   $("[data-category-type='"+category+"']").show();
         //   if(category == 'all')$("li").show();
         // })
-
 
 
 

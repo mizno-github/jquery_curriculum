@@ -50,14 +50,13 @@
       $(function(){
         $('.menu__list__title').parent().hover(
           function(){
-            $(this).children().next('.menu__list__childList').stop().slideDown();
-            $('.menu__list__childList__title').stop().slideDown();
+            $(this).children('.menu__list__childList').stop().slideDown();
           },
           function(){
             $(this).children().next('.menu__list__childList').stop().slideUp();
           }
+          )
         });
-        )
         
         // $('.menu__list__childList').hover(
         //   function(){
