@@ -67,7 +67,7 @@
     });
  })
     // キーワードの評価
-    function searchText(){
+    function searchText() {
       // 前回打ったキーワードと今回打ったキーワードを比較し違う場合は表示ページを１にリセット
       // 同じキーワードであれば次のページを取得の準備をする
       if(oldword != word){
@@ -92,7 +92,6 @@
         "</a>"+
         "</div>"+
         "</li>";
-        // );
       })
       $('.lists').prepend(allList);
      }
@@ -116,28 +115,26 @@
     
     //  ajaxのエラー時の処理
      function httpError(errorList){
-        // もしも前のエラー表示が残っていたらその表示を消す
-        if($('.message')){
+        // もしも前のエラー表示時にリストが残っていたらその表示を消す
           $('.lists').children().remove();
           pages =0;
-        } 
         // エラー内容に合わせてエラー表示
         var eroorText = errorList.statusText;
         switch(eroorText){
           case "429":
-          $('.search').after("<div class='message'>連打しないでください</div>")
+          $('.search').after("<div class='message'>連打しないでください</div>");
               break;
           
           case "Bad Request":
-          $('.search').after("<div class='message'>文字が短すぎます</div>")
+          $('.search').after("<div class='message'>文字が短すぎます</div>");
               break;
 
           case "error":
-          $('.search').after("<div class='message'>通信エラーです</div>")
+          $('.search').after("<div class='message'>通信エラーです</div>");
               break;
 
           default:
-          $('.search').after("<div class='message'>予期せぬエラーが起きました</div>")
+          $('.search').after("<div class='message'>予期せぬエラーが起きました</div>");
               break;
         }
      }
