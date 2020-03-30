@@ -26,12 +26,16 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
-      $(function(){ 
+
+    $(function(){ 
       
-      var pages = 1,displayNumber = 20,word,oldword,allList;
+      var pages = 1,
+          displayNumber = 20,
+          word,
+          oldword,
+          allList;
 
       $('#js-search-button').click(function() {// 送るデータ入力部分
-        // if($('.massage'))$('.message').remove();
         
         // 検索ワードの取得
         word = $('#js-search-word').val();
@@ -56,67 +60,63 @@
           // ページ数が表示しているリストよりも多い場合、またはページ数が１ページかつリスト数が１以上の場合リストの表示を増やす
           // それ以外の場合は表示できるリストがないのでエラーメッセージを表示
           addPage(data);
-      }).fail(function(errorList) {
+        }).fail(function(errorList) {
 
         //  ajaxのエラー時の処理
         httpError(errorList);
+        });
       });
-    });
-    // キーワードの評価
-    function searchText() {
+       // キーワードの評価
+      function searchText() {
 
-      // 前回打ったキーワードと今回打ったキーワードを比較し違う場合は表示ページを１にリセット
-      // 同じキーワードであれば次のページを取得の準備をする
-      if(oldword !== word){
-        // キーワードに変更があった場合リストを全削除する
-        $('.lists').children().remove();
-        $('.message').remove();
-        pages = 1;
-      }else{
-        pages = pages +1;
+        // 前回打ったキーワードと今回打ったキーワードを比較し違う場合は表示ページを１にリセット
+        // 同じキーワードであれば次のページを取得の準備をする
+        if(oldword !== word){
+          // キーワードに変更があった場合リストを全削除する
+          $('.lists').children().remove();
+          $('.message').remove();
+          pages = 1;
+        }else{
+          pages = pages +1;
+        }
       }
-    }
-    
-    // １ページの表示
-    
-    
-    
-    //  ２ページ以降の表示と条件振り分け
-    function addPage(data) {
-      if(data.count > 0) {
-        $('.message').remove();
-        var allList ="";
-        $.each(data.Items, function functionName(index,val) {
-        // もしもタイトルが違う場合DATAを表示する
-          allList +=
-            '<li class="lists__item">'+
-              '<div class="lists__item__inner">'+
-                '<a href="" class="lists__item__link" target="_blank">'+
-                '<img src="'+val.Item.largeImageUrl+'" class="lists__item__img" alt="">'+
-                '<p class ="lists__item__detail">作品名：　'+val.Item.title+'</p>'+
-                '<p class ="lists__item__detail">作者　：　'+val.Item.author+'</p>'+
-                '<p class ="lists__item__detail">出版社：　'+val.Item.publisherName+'</p>'+
-                '</a>'+
-              '</div>'+
-            '</li>';
-      })
-      $('.lists').prepend(allList);
-        oldword = word;
-      }else{
-        noResult();
+      
+      //  ページの表示と条件振り分け
+      function addPage(data) {
+        if(data.count > 0) {
+          $('.message').remove();
+          var allList ="";
+          $.each(data.Items, function functionName(index,val) {
+          // もしもタイトルが違う場合DATAを表示する
+            allList +=
+              '<li class="lists__item">'+
+                '<div class="lists__item__inner">'+
+                  '<a href="" class="lists__item__link" target="_blank">'+
+                  '<img src="'+val.Item.largeImageUrl+'" class="lists__item__img" alt="">'+
+                  '<p class ="lists__item__detail">作品名：　'+val.Item.title+'</p>'+
+                  '<p class ="lists__item__detail">作者　：　'+val.Item.author+'</p>'+
+                  '<p class ="lists__item__detail">出版社：　'+val.Item.publisherName+'</p>'+
+                  '</a>'+
+                '</div>'+
+              '</li>';
+          })
+          $('.lists').prepend(allList);
+          oldword = word;
+        }else{
+          noResult();
+        }
       }
-     }
 
-    //  検索結果のエラー時の処理
-     function noResult() {
-      $('.message').remove();
+        //  検索結果のエラー時の処理
+      function noResult() {
+        $('.message').remove();
         $('.search').after("<div class='message'>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>");
-     }
+      }
     
-    //  ajaxのエラー時の処理
-     function httpError(errorList,jk) {
+        //  ajaxのエラー時の処理
+      function httpError(errorList) {
         // もしも前のエラー表示時にリストが残っていたらその表示を消す
-        if(!$('.lists').hasClass('.lists')) $('.lists').children().remove();
+        $('.lists').children().remove();
         $('.message').remove();
         pages = 0;
         // エラー内容に合わせてエラー表示
@@ -139,8 +139,7 @@
           $('.search').after("<div class='message'>予期せぬエラーが起きました</div>");
               break;
         }
-     }
-
+      }
 
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
@@ -204,4 +203,26 @@
 レ　caseの中身変更番号にする
 レ　''と"を変更
 レ　data.Items[index].Item.largeImageUr
+
+インデント
+POST GETの説明
+
+
+GET
+  URLに乗っけてデータを送信する
+  URLに情報が載る
+  データが漏れる可能性がある
+  ブックマークできる
+  キャッシュが残る
+
+
+
+
+POST
+  データをデータベースに送信する
+  URLは変わらない
+  個人情報などはPOSTを使わないと漏れる可能性がある
+  気密性が高い
+
+
  -->
