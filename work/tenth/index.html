@@ -28,10 +28,10 @@
     <script>
       $(function(){ 
       
-        var word,oldword,pages=1,allList;
+      var pages = 1,displayNumber = 20,word,oldword,allList;
 
-      $('#js-search-button').click(function(){// 送るデータ入力部分
-        $('.message').remove();
+      $('#js-search-button').click(function() {// 送るデータ入力部分
+        // if($('.massage'))$('.message').remove();
         
         // 検索ワードの取得
         word = $('#js-search-word').val();
@@ -45,20 +45,17 @@
           type: 'GET',
           datatype: 'json',
           data: {
-          applicationId: '1019399324990976605', 
-          booksGenreId: '001',
-          keyword: word,
-          page: pages,
-          hits:20,
+            applicationId: '1019399324990976605', 
+            booksGenreId: '001',
+            keyword: word,
+            page: pages,
+            hits:displayNumber,
           },
         }).done(function(data) {// 返ってきたデータを受け取る部分
 
-        // キーワードに変更があった場合リストを全削除する
-        if(oldword !== word) $('.lists').children().remove();
-
-        // ページ数が表示しているリストよりも多い場合、またはページ数が１ページかつリスト数が１以上の場合リストの表示を増やす
-        // それ以外の場合は表示できるリストがないのでエラーメッセージを表示
-        addPage(data);
+          // ページ数が表示しているリストよりも多い場合、またはページ数が１ページかつリスト数が１以上の場合リストの表示を増やす
+          // それ以外の場合は表示できるリストがないのでエラーメッセージを表示
+          addPage(data);
       }).fail(function(errorList) {
 
         //  ajaxのエラー時の処理
@@ -67,36 +64,41 @@
     });
     // キーワードの評価
     function searchText() {
+
       // 前回打ったキーワードと今回打ったキーワードを比較し違う場合は表示ページを１にリセット
       // 同じキーワードであれば次のページを取得の準備をする
       if(oldword !== word){
+        // キーワードに変更があった場合リストを全削除する
+        $('.lists').children().remove();
+        $('.message').remove();
         pages = 1;
       }else{
-        pages =+1;
+        pages = pages +1;
       }
     }
-
+    
     // １ページの表示
-
-
-
+    
+    
+    
     //  ２ページ以降の表示と条件振り分け
-     function addPage(data){
-      if(data.count > 0){
+    function addPage(data) {
+      if(data.count > 0) {
+        $('.message').remove();
         var allList ="";
         $.each(data.Items, function functionName(index,val) {
         // もしもタイトルが違う場合DATAを表示する
-        allList +=
-        "<li class='lists__item'>"+
-          "<div class='lists__item__inner'>"+
-            "<a href='' class='lists__item__link' target='_blank'>"+
-            "<img src='"+data.Items[index].Item.largeImageUrl+"' class='lists__item__img' alt=''>"+
-            "<p class ='lists__item__detail'>作品名：　"+data.Items[index].Item.title+"</p>"+
-            "<p class ='lists__item__detail'>作者　：　"+data.Items[index].Item.author+"</p>"+
-            "<p class ='lists__item__detail'>出版社：　"+data.Items[index].Item.publisherName+"</p>"+
-            "</a>"+
-          "</div>"+
-        "</li>";
+          allList +=
+            '<li class="lists__item">'+
+              '<div class="lists__item__inner">'+
+                '<a href="" class="lists__item__link" target="_blank">'+
+                '<img src="'+val.Item.largeImageUrl+'" class="lists__item__img" alt="">'+
+                '<p class ="lists__item__detail">作品名：　'+val.Item.title+'</p>'+
+                '<p class ="lists__item__detail">作者　：　'+val.Item.author+'</p>'+
+                '<p class ="lists__item__detail">出版社：　'+val.Item.publisherName+'</p>'+
+                '</a>'+
+              '</div>'+
+            '</li>';
       })
       $('.lists').prepend(allList);
         oldword = word;
@@ -106,33 +108,35 @@
      }
 
     //  検索結果のエラー時の処理
-     function noResult(){
+     function noResult() {
       $('.message').remove();
         $('.search').after("<div class='message'>検索結果が見つかりませんでした。<br>別のキーワードで検索して下さい。</div>");
      }
     
     //  ajaxのエラー時の処理
-     function httpError(errorList){
+     function httpError(errorList,jk) {
         // もしも前のエラー表示時にリストが残っていたらその表示を消す
-          $('.lists').children().stop().remove();
-          pages = 0;
+        if(!$('.lists').hasClass('.lists')) $('.lists').children().remove();
+        $('.message').remove();
+        pages = 0;
         // エラー内容に合わせてエラー表示
-        var errorText = errorList.statusText;
-        switch(errorText){
-          case "429":
-          $('.search').stop().after("<div class='message'>連打しないでください</div>");
+        var errorText = errorList.status;
+
+        switch(errorText) {
+          case 429:
+          $('.search').after("<div class='message'>連打しないでください</div>");
               break;
           
-          case "Bad Request":
-          $('.search').stop().after("<div class='message'>文字が短すぎます</div>");
+          case 400:
+          $('.search').after("<div class='message'>文字が短すぎます</div>");
               break;
 
-          case "error":
-          $('.search').stop().after("<div class='message'>通信エラーです</div>");
+          case 0:
+          $('.search').after("<div class='message'>通信エラーです</div>");
               break;
 
           default:
-          $('.search').stop().after("<div class='message'>予期せぬエラーが起きました</div>");
+          $('.search').after("<div class='message'>予期せぬエラーが起きました</div>");
               break;
         }
      }
@@ -191,4 +195,13 @@
 レ  イコール三つ
 １０問の説明
 レ  htmlインデント
+
+レ　がしゃがしゃしない
+レ　ajaxインッデント
+レ　hits変数か
+レ　同じ条件二つのいらない
+レ　インデントもう一度確認
+レ　caseの中身変更番号にする
+レ　''と"を変更
+レ　data.Items[index].Item.largeImageUr
  -->
